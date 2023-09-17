@@ -19,17 +19,18 @@
 *                   and it can't transmit new data.
 */
 
-module UART_transmitter_FSM # (
-    parameter DATA_WIDTH = 8,
+module UART_transmitter_FSM # (         parameter DATA_WIDTH = 8,
+                                        // Bit select values
+                                        parameter [1:0] START_BIT_SELECT = 2'b00,
+                                        parameter [1:0] STOP_BIT_SELECT = 2'b01,
+                                        parameter [1:0] SERIAL_DATA_BIT_SELECT = 2'b10,
+                                        parameter [1:0] PARITY_BIT_SELECT = 2'b11 
+                                )
 
-    // Bit select values
-    parameter [1:0] START_BIT_SELECT = 2'b00,
-    parameter [1:0] STOP_BIT_SELECT = 2'b01,
-    parameter [1:0] SERIAL_DATA_BIT_SELECT = 2'b10,
-    parameter [1:0] PARITY_BIT_SELECT = 2'b11
-)
+    
 (
-    input clk,
+    //inputs
+    input UCLK,
     input reset,
     input parity_enable,
     input data_valid,
@@ -58,7 +59,7 @@ module UART_transmitter_FSM # (
 
 
     // 'Serial data index' register
-    always @(posedge clk or negedge reset) begin
+    always @(posedge UCLK or negedge reset) begin
         if (~reset) begin
             serial_data_transmission_state <= 'b0;
         end
@@ -83,7 +84,7 @@ module UART_transmitter_FSM # (
 
 
     // State transition
-    always @(posedge clk or negedge reset) begin
+    always @(posedge UCLK or negedge reset) begin
         if (~reset) begin
             current_state <= IDLE;
         end
