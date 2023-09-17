@@ -36,8 +36,8 @@ module UART_transmitter_FSM # (         parameter DATA_WIDTH = 8,
     input data_valid,
 
     output reg serial_enable,
-    output reg [1:0] bit_select,
-    output wire [$clog2(DATA_WIDTH) - 1:0] serial_data_index,
+    output reg [1:0] mux_select,
+    output wire [$clog2(DATA_WIDTH) - 1:0] serial_data,
     output reg busy
 );
 
