@@ -1,24 +1,3 @@
-/*
-* ----------------------------- Ports' Definition -----------------------------
-* ----------------------------- Inputs -----------------------------
-* clk:               Generated clock produced from the clock divider whose source clock is
-*                    UART clock.
-* reset:             Global active low asynchronous reset after synchronization.
-* parity_enable:     A signal to enable the transmission of the parity bit in the frame.
-* data_valid:        A signal that indicates that there exist data to be transmitted.
-* 
-* ----------------------------- Outputs -----------------------------
-* serial_enable:    A signal to enable the operation of the serializer.
-* bit_select:       The output mux selection bits that selects the output 
-*                   bit (start bit, serial data bit, parity bit, or stop bit).
-*                   The value of those selection bits is decided according to the current
-*                   state of the transmission.
-* seial_data_index: A number between 0 and 7 that indicates the index of the bit to be 
-*                   transmitted serially.
-* busy:             A signal that indicates that the transmitter is currently in operation
-*                   and it can't transmit new data.
-*/
-
 module UART_transmitter_FSM # (         parameter DATA_WIDTH = 8,
                                         // Bit select values
                                         parameter [1:0] START_BIT_SELECT = 2'b00,
