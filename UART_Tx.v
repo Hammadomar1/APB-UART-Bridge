@@ -80,7 +80,7 @@ module UART_transmitter_FSM # (         parameter DATA_WIDTH = 8,
         end
     end
 
-    assign serial_data_index = serial_data_transmission_state[$clog2(DATA_WIDTH) - 1:0];
+    assign serial_data = serial_data_transmission_state[$clog2(DATA_WIDTH) - 1:0];
 
 
     // State transition
@@ -151,7 +151,7 @@ module UART_transmitter_FSM # (         parameter DATA_WIDTH = 8,
                 busy = 1'b0;
                 serial_enable = 1'b0;
                 // The output at the IDLE state is the same as the stop bit (which is logic 1)
-                bit_select = STOP_BIT_SELECT;
+                mux_select = STOP_BIT_SELECT;
             end
 
             // The serial enable is enabled in this state because just after the sampling edge 
@@ -160,7 +160,7 @@ module UART_transmitter_FSM # (         parameter DATA_WIDTH = 8,
             START_BIT_TRANSMISSION: begin
                 busy = 1'b1;
                 serial_enable = 1'b1;
-                bit_select = START_BIT_SELECT;
+                mux_select = START_BIT_SELECT;
             end
 
             SERIAL_DATA_TRANSMISSION: begin
@@ -173,19 +173,19 @@ module UART_transmitter_FSM # (         parameter DATA_WIDTH = 8,
                     serial_enable = 1'b1;
                 end
                 
-                bit_select = SERIAL_DATA_BIT_SELECT;
+                mux_select = SERIAL_DATA_BIT_SELECT;
             end
 
             PARTIY_BIT_TRANSMISSION: begin
                 busy = 1'b1;
                 serial_enable = 1'b0;
-                bit_select = PARITY_BIT_SELECT;
+                mux_select = PARITY_BIT_SELECT;
             end
 
             STOP_BIT_TRANSMISSION: begin
                 busy = 1'b1;
                 serial_enable = 1'b0;
-                bit_select = STOP_BIT_SELECT;
+                mux_select = STOP_BIT_SELECT;
             end
 
             default: begin
