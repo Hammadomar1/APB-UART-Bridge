@@ -1,4 +1,4 @@
-module output_mux # (
+module uart_tx_mux # (
                         // Bit select values
                         parameter [1:0] START_BIT_SELECT = 2'b00,
                         parameter [1:0] STOP_BIT_SELECT = 2'b01,
