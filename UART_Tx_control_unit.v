@@ -11,13 +11,14 @@ module UART_Tx_control_unit # (         parameter DATA_WIDTH = 8,
     //inputs
     input UCLK,
     input reset,
-    input parity_enable,
+    input parity_en,
     input data_valid,
 
-    output reg serial_enable,
+    output reg       ser_en,
     output reg [1:0] mux_select,
-    output wire [$clog2(DATA_WIDTH) - 1:0] serial_data,
-    output reg busy
+    output wire      [$clog2(DATA_WIDTH) - 1:0] serial_data,
+    output reg       busy,
+    output reg       uart_tx_state
 );
 
     // A register that saves the index of the bit to be transmitted
@@ -94,7 +95,7 @@ module UART_Tx_control_unit # (         parameter DATA_WIDTH = 8,
                 // If the following condition is satisfied, this means that the byte is transmitted
                 if (serial_data_transmission_state[$clog2(DATA_WIDTH)])
                 begin
-                    if (parity_enable)
+                    if (parity_en)
                     begin
                         next_state = PARTIY_BIT_TRANSMISSION;
                     end
@@ -128,7 +129,7 @@ module UART_Tx_control_unit # (         parameter DATA_WIDTH = 8,
         case (current_state)
             IDLE: begin
                 busy = 1'b0;
-                serial_enable = 1'b0;
+                ser_en = 1'b0;
                 // The output at the IDLE state is the same as the stop bit (which is logic 1)
                 mux_select = STOP_BIT_SELECT;
             end
@@ -138,7 +139,7 @@ module UART_Tx_control_unit # (         parameter DATA_WIDTH = 8,
             // serial data needs to be transmitted immediately
             START_BIT_TRANSMISSION: begin
                 busy = 1'b1;
-                serial_enable = 1'b1;
+                ser_en = 1'b1;
                 mux_select = START_BIT_SELECT;
             end
 
@@ -146,10 +147,10 @@ module UART_Tx_control_unit # (         parameter DATA_WIDTH = 8,
                 busy = 1'b1;
                 // If the following condition is satisfied, this means that the byte is transmitted
                 if (serial_data_transmission_state[$clog2(DATA_WIDTH)]) begin
-                    serial_enable = 1'b0;
+                    ser_en = 1'b0;
                 end
                 else begin
-                    serial_enable = 1'b1;
+                    ser_en = 1'b1;
                 end
                 
                 mux_select = SERIAL_DATA_BIT_SELECT;
@@ -157,19 +158,19 @@ module UART_Tx_control_unit # (         parameter DATA_WIDTH = 8,
 
             PARTIY_BIT_TRANSMISSION: begin
                 busy = 1'b1;
-                serial_enable = 1'b0;
+                ser_en = 1'b0;
                 mux_select = PARITY_BIT_SELECT;
             end
 
             STOP_BIT_TRANSMISSION: begin
                 busy = 1'b1;
-                serial_enable = 1'b0;
+                ser_en = 1'b0;
                 mux_select = STOP_BIT_SELECT;
             end
 
             default: begin
                 busy = 1'b0;
-                serial_enable = 1'b0;
+                ser_en = 1'b0;
                 bit_select = STOP_BIT_SELECT;
             end
         endcase
