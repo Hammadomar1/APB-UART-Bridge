@@ -24,7 +24,7 @@ module UART_Tx_control_unit # (         parameter DATA_WIDTH = 8,
     // A register that saves the index of the bit to be transmitted
     // When the value of this register equals 1000, this means that the byte is completely transmitted
     reg [$clog2(DATA_WIDTH):0] serial_data_transmission_state;
-
+    reg [2:0] uart_tx_state;
     // FSM state register signals
     reg [2:0] current_state;
     reg [2:0] next_state;
@@ -171,10 +171,60 @@ module UART_Tx_control_unit # (         parameter DATA_WIDTH = 8,
             default: begin
                 busy = 1'b0;
                 ser_en = 1'b0;
-                bit_select = STOP_BIT_SELECT;
+                mux_select = STOP_BIT_SELECT;
             end
         endcase
     end
-
+//UART_TX_STATE//
+  always @(posedge UCLK or negedge reset) begin
+  if (!reset) begin
+    uart_tx_state <= 3'b000; // Initial state after reset
+  end else begin
+    case (uart_tx_state)
+      3'b000: IDLE// State 0
+        begin
+          // Code for State 0 behavior
+          // Transition to the next state based on conditions
+          if (condition) begin
+            uart_tx_state <= 3'b001; // Transition to State 1
+          end
+        end
+      3'b001: START_BIT// State 1
+        begin
+          // Code for State 1 behavior
+          // Transition to the next state based on conditions
+          if (condition) begin
+            uart_tx_state <= 3'b010; // Transition to State 2
+          end
+        end
+      3'b010: DATA_BIT// State 2
+        begin
+          // Code for State 2 behavior
+          // Transition to the next state based on conditions
+          if (condition) begin
+            uart_tx_state <= 3'b011; // Transition to State 3
+          end
+        end
+      3'b011: PARITY_BIT// State 3
+        begin
+          // Code for State 3 behavior
+          // Transition to the next state based on conditions
+          if (condition) begin
+            uart_tx_state <= 3'b100; // Transition back to State 0
+          end
+        end
+       3'b100: STOP_BIT// State 2
+        begin
+          // Code for State 2 behavior
+          // Transition to the next state based on conditions
+          if (condition) begin
+            uart_tx_state <= 3'b101; // Transition to State 3
+          end
+        end
+      default: // Default case for any other values
+        uart_tx_state <= 3'b000; // Reset to initial state
+    endcase
+  end
+end
 
 endmodule
