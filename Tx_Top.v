@@ -12,9 +12,9 @@ module Tx_Top #(parameter DATA_WIDTH = 8)
     input data_valid,
     input [DATA_WIDTH - 1:0] parallel_data,
 
-    output mux_out,
-    output busy
-
+    output reg mux_out,
+    output reg busy,
+    output reg uart_tx_state
 );
 
     // Bit select values of the output mux
@@ -41,11 +41,12 @@ module Tx_Top #(parameter DATA_WIDTH = 8)
         .UCLK(UCLK)                      ,
         .reset(reset)                    ,
         .data_valid(data_valid)          ,
-        .parity_enable(parity_en)        ,
-        .serial_enable(ser_en)           ,
+        .parity_en(parity_en)            ,
+        .ser_en(ser_en)                  ,
         .bit_select(bit_select)          ,
         .frame(frame)                    ,
-        .busy(busy)
+        .busy(busy)                      ,
+        .uart_tx_state(uart_tx_state)    
     );
 
 
