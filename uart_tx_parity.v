@@ -1,4 +1,4 @@
-module parity_calculator # (parameter DATA_WIDTH = 8)
+module uart_tx_parity # (parameter DATA_WIDTH = 8)
 (
     input UCLK,
     input reset,
