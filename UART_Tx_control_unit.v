@@ -1,4 +1,4 @@
-module UART_transmitter_FSM # (         parameter DATA_WIDTH = 8,
+module UART_Tx_control_unit # (         parameter DATA_WIDTH = 8,
                                         // Bit select values
                                         parameter [1:0] START_BIT_SELECT = 2'b00,
                                         parameter [1:0] STOP_BIT_SELECT = 2'b01,
