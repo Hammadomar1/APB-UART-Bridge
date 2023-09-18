@@ -1,4 +1,4 @@
-module serializer #( parameter DATA_WIDTH = 8)
+module uart_tx_serializer #( parameter DATA_WIDTH = 8)
   (
     input UCLK,
     input reset, 
