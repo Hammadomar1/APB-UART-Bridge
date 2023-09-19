@@ -6,7 +6,7 @@
 `include "uart_rx_parity_checker.v"
 `include "uart_rx_stopbit_checker.v"
 
-module UART_receiver #(
+module Rx_Top #(
     parameter DATA_WIDTH = 8) 
 (
     input UCLK,
@@ -36,10 +36,10 @@ module UART_receiver #(
 
     assign frame_error = start_bit_error | stop_bit_error;
 
-    UART_receiver_FSM #(
+    UART_Rx_control_unit #(
         .DATA_WIDTH(DATA_WIDTH)
     )
-    U_UART_receiver_FSM (
+    U_UART_Rx_FSM (
         .UCLK(UCLK),
         .reset(reset),
         .parity_enable(parity_enable),
@@ -60,7 +60,7 @@ module UART_receiver #(
         .data_valid(data_valid)
     );
 
-    data_sampler U_data_sampler (
+    uart_rx_data_sampler U_data_sampler (
         .UCLK(UCLK),
         .reset(reset),
         .serial_data_in(serial_data_in),
@@ -71,7 +71,7 @@ module UART_receiver #(
         .sampled_bit(sampled_bit)
     );
 
-    deserializer #(
+    uart_rx_deserializer #(
         .DATA_WIDTH(DATA_WIDTH)
     )
     U_deserializer (
@@ -84,7 +84,7 @@ module UART_receiver #(
         .parallel_data(parallel_data)
     );
 
-    edge_counter U_edge_counter (
+    uart_rx_edge_counter U_edge_counter (
         .UCLK(UCLK),
         .reset(reset),
         .prescale(prescale),
@@ -94,7 +94,7 @@ module UART_receiver #(
         .edge_count_done(edge_count_done)
     );
 
-    start_bit_checker U_start_bit_checker (
+    uart_rx_startbit_checker U_start_bit_checker (
         .UCLK(UCLK),
         .reset(reset),
         .enable(start_bit_check_enable),
@@ -103,10 +103,10 @@ module UART_receiver #(
         .start_bit_error(start_bit_error)
     );
 
-    parity_bit_checker #(
+    uart_rx_parity_checker #(
         .DATA_WIDTH(DATA_WIDTH)
     )
-    U_parity_bit_checker (
+    U_parity_checker (
         .UCLK(UCLK),
         .reset(reset),
         .parity_type(parity_type),
@@ -117,7 +117,7 @@ module UART_receiver #(
         .parity_bit_error(parity_error) 
     );
 
-    stop_bit_checker U_stop_bit_checker (
+    uart_rx_stopbit_checker U_stopbit_checker (
         .UCLK(UCLK),
         .reset(reset),
         .enable(stop_bit_check_enable),
