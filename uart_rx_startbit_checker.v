@@ -1,4 +1,4 @@
-module start_bit_checker (
+module uart_rx_startbit_checker (
     input UCLK,
     input reset,
     input enable,
