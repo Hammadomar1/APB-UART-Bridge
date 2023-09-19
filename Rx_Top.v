@@ -1,16 +1,15 @@
-`include "UART_receiver_FSM.v"
-`include "data_sampler.v"
-`include "deserializer.v"
-`include "edge_counter.v"
-`include "start_bit_checker.v"
-`include "parity_bit_checker.v"
-`include "stop_bit_checker.v"
+`include "UART_Rx_control_unit.v"
+`include "uart_rx_data_sampler.v"
+`include "uart_rx_deserializer.v"
+`include "uart_rx_edge_counter.v"
+`include "uart_rx_startbit_checker.v"
+`include "uart_rx_parity_checker.v"
+`include "uart_rx_stopbit_checker.v"
 
 module UART_receiver #(
-    parameter DATA_WIDTH = 8
-) 
+    parameter DATA_WIDTH = 8) 
 (
-    input clk,
+    input UCLK,
     input reset,
     input parity_type,
     input parity_enable,
@@ -41,7 +40,7 @@ module UART_receiver #(
         .DATA_WIDTH(DATA_WIDTH)
     )
     U_UART_receiver_FSM (
-        .clk(clk),
+        .UCLK(UCLK),
         .reset(reset),
         .parity_enable(parity_enable),
         .serial_data_in(serial_data_in),
@@ -62,7 +61,7 @@ module UART_receiver #(
     );
 
     data_sampler U_data_sampler (
-        .clk(clk),
+        .UCLK(UCLK),
         .reset(reset),
         .serial_data_in(serial_data_in),
         .prescale(prescale[5:1]),
@@ -76,7 +75,7 @@ module UART_receiver #(
         .DATA_WIDTH(DATA_WIDTH)
     )
     U_deserializer (
-        .clk(clk),
+        .UCLK(UCLK),
         .reset(reset),
         .enable(deserializer_enable),
         .data_index(data_index),
@@ -86,7 +85,7 @@ module UART_receiver #(
     );
 
     edge_counter U_edge_counter (
-        .clk(clk),
+        .UCLK(UCLK),
         .reset(reset),
         .prescale(prescale),
         .enable(edge_counter_and_data_sampler_enable),
@@ -96,7 +95,7 @@ module UART_receiver #(
     );
 
     start_bit_checker U_start_bit_checker (
-        .clk(clk),
+        .UCLK(UCLK),
         .reset(reset),
         .enable(start_bit_check_enable),
         .sampled_bit(sampled_bit),
@@ -108,7 +107,7 @@ module UART_receiver #(
         .DATA_WIDTH(DATA_WIDTH)
     )
     U_parity_bit_checker (
-        .clk(clk),
+        .UCLK(UCLK),
         .reset(reset),
         .parity_type(parity_type),
         .enable(parity_bit_check_enable),
@@ -119,7 +118,7 @@ module UART_receiver #(
     );
 
     stop_bit_checker U_stop_bit_checker (
-        .clk(clk),
+        .UCLK(UCLK),
         .reset(reset),
         .enable(stop_bit_check_enable),
         .sampled_bit(sampled_bit),
