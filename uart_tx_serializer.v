@@ -23,6 +23,8 @@ module uart_tx_serializer #( parameter DATA_WIDTH = 8)
             serial_data <= D_serial_data;
         end
     end
-
-
+  if (error_inj_enable && ~error_inj_done)
+    begin
+      D_serial_data=~D_serial_data;
+    end
 endmodule
