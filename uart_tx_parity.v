@@ -16,8 +16,13 @@ module uart_tx_parity # (parameter DATA_WIDTH = 8)
         end
         else if (parity_enable && data_valid) 
           begin
+              if (err_inj_en)
+                      begin 
+                            parity_bit <= ^parallel_data;
+                      end
+              else
                 // Odd parity
-                parity_bit <= ~^parallel_data;
+                            parity_bit <= ~^parallel_data;
           end
         end
     end
